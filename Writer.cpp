@@ -12,7 +12,7 @@ uint32_t to_little_endian(const uint32_t x) {
 		return x;
 	}
 	else {
-		return std::byteswap(x);
+		return ((x & 255) << 24) | ((x & 65280) << 8) | ((x & 16711680) >> 8) | ((x & 4278190080ul) >> 16);
 	};
 };
 bool write(struct ListNode* first, std::string path) {
