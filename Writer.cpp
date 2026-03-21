@@ -4,10 +4,11 @@
 #include <cstdint>
 #include <array>
 #include <unordered_map>
+#include <winsock.h>
 #include "Headers.hpp"
 
 bool write(struct ListNode* first, std::string path) {
-	static const uint32_t magic = 1337;
+	static const uint32_t magic = htonl(1337); // TODO перенести преобразование в какой-то один порядок байтов, но через функцию не из сетевого стека
 	std::unordered_map<ListNode*, int> indices{};
 	struct ListNode* current = first;
 	uint32_t i = 0;
@@ -16,6 +17,7 @@ bool write(struct ListNode* first, std::string path) {
 		current = current->next;
 		i++;
 	};
+	i = htonl(i);
 	std::ofstream f_stream{ path, std::ios::binary | std::ios::trunc };
 	if (!f_stream.good()) {
 		std::cerr << "Cannot open file" << std::endl;
@@ -28,9 +30,9 @@ bool write(struct ListNode* first, std::string path) {
 		current = first;
 		while (current) {
 			static const std::array<char, 8> zero_pad{};
-			const int32_t length = current->data.length();
+			const int32_t length = htonl(current->data.length());
 			f_stream.write((const char*)&length, sizeof length); // Записываем длину пользовательских данных
-			const int32_t index = current->rand ? indices[current->rand] : (-1);
+			const int32_t index = htonl(current->rand ? indices[current->rand] : -1);
 			f_stream.write((const char*)&index, sizeof index); // Записываем индекс элемента, куда указывает rand
 			f_stream.write((const char*)current->data.data(), current->data.length()); // Записываем данные
 			f_stream.write(zero_pad.data(), (8 - (current->data.length() % 8)) & 7); // Записываем набивку до кратности в 8 байтов
