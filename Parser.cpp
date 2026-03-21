@@ -3,7 +3,11 @@
 
 int main() {
 	struct ListNode* begin;
-	begin = load("C:\\Users\\ִלטענטי\\source\\repos\\LinkedListParser\\in.txt");
-	write(begin, "C:\\Users\\ִלטענטי\\source\\repos\\LinkedListParser\\out");
-	cleanup(begin);
+	begin = load("inlet.in");
+	if (begin) {
+		write(begin, "outlet.out");
+		cleanup(begin);
+		return 0;
+	};
+	return 255;
 };

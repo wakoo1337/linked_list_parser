@@ -21,19 +21,19 @@ bool write(struct ListNode* first, std::string path) {
 		std::cerr << "Cannot open file" << std::endl;
 		return true;
 	}
-	f_stream.exceptions(std::ios::failbit);
+	f_stream.exceptions(std::ios::badbit);
 	try {
-		f_stream.write((const char*)&magic, sizeof magic);
-		f_stream.write((const char*)&i, sizeof i);
+		f_stream.write((const char*)&magic, sizeof magic); // Записываем магическое число
+		f_stream.write((const char*)&i, sizeof i); // Записываем общее количество элементов
 		current = first;
 		while (current) {
 			static const std::array<char, 8> zero_pad{};
 			const int32_t length = current->data.length();
-			f_stream.write((const char*)&length, sizeof length);
+			f_stream.write((const char*)&length, sizeof length); // Записываем длину пользовательских данных
 			const int32_t index = current->rand ? indices[current->rand] : (-1);
-			f_stream.write((const char*)&index, sizeof index);
-			f_stream.write((const char*)current->data.data(), current->data.length());
-			f_stream.write(zero_pad.data(), (8 - (current->data.length() % 8)) & 7);
+			f_stream.write((const char*)&index, sizeof index); // Записываем индекс элемента, куда указывает rand
+			f_stream.write((const char*)current->data.data(), current->data.length()); // Записываем данные
+			f_stream.write(zero_pad.data(), (8 - (current->data.length() % 8)) & 7); // Записываем набивку до кратности в 8 байтов
 			current = current->next;
 		};
 	} catch (std::ios_base::failure& failure) {

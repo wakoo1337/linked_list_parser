@@ -58,7 +58,7 @@ struct ListNode* load(std::string path) {
 			rands[current] = node_index;
 		};
 	};
-	if (f_stream.fail()) {
+	if (f_stream.bad()) {
 		cleanup(first);
 		std::cerr << "Cannot read from file" << std::endl;
 		return nullptr; // Ошибка при чтении из файла
