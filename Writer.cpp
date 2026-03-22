@@ -16,7 +16,7 @@ uint32_t to_little_endian(const uint32_t x) {
 	};
 };
 bool write(struct ListNode* first, std::string path) {
-	static const uint32_t magic = to_little_endian(1337); // TODO перенести преобразование в какой-то один порядок байтов, но через функцию не из сетевого стека
+	static const uint32_t magic = to_little_endian(1337);
 	std::unordered_map<ListNode*, int> indices{};
 	struct ListNode* current = first;
 	uint32_t i = 0;
